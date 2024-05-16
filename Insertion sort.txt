@@ -1,0 +1,54 @@
+//insertion sort array
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int n;
+    
+    cout << "Numar elemente array : ";
+    cin >> n;
+    
+    int array[n];
+    
+    cout << "Introduceti elementele array-ului : ";
+    
+    for(int i = 0; i < n; i++)
+    {
+        cin >> array[i];
+    }
+    
+    
+    cout << "Array initial" <<endl;
+    
+    for(int i : array)
+    {
+        cout << i << " ";
+    }
+    
+    cout << endl;
+    
+    //insertion sort in ordine crescatoare
+    
+    for(int i = 1; i < n; i++)
+    {
+        int aux = array[i];
+        int j = i -1;
+        
+        while(j >= 0 && array[j] > aux)
+        {
+            array[j + 1] = array[j];
+            j--;
+        }
+        array[j + 1] = aux;
+    }
+    
+    cout << "Array ordonat crescator prin insertion sort : " << endl;
+    
+    for(int i : array)
+    {
+        cout << i << " ";
+    }
+    
+    return 0;
+}

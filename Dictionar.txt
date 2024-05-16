@@ -1,0 +1,94 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+// Structura pentru nodurile listei înlănțuite
+struct ListNode {
+    string word;
+    ListNode* next;
+
+    ListNode(const string& w) : word(w), next(nullptr) {}
+};
+
+// Structura pentru tabelul de dispersie
+class HashTable {
+private:
+    vector<ListNode*> table;
+
+    // Funcție de dispersie simplă, care returnează indicele corespunzător literei din cuvânt
+    int hashFunction(const string& key) {
+        return key[0] - 'a';
+    }
+
+public:
+    HashTable(int size) {
+        table.resize(size);
+    }
+
+    // Funcție pentru adăugarea unui cuvânt în tabel
+    void insert(const string& key) {
+        int index = hashFunction(key);
+        ListNode* newNode = new ListNode(key);
+        newNode->next = table[index];
+        table[index] = newNode;
+    }
+
+    // Funcție pentru căutarea unui cuvânt în tabel
+    bool search(const string& key) {
+        int index = hashFunction(key);
+        ListNode* current = table[index];
+        while (current != nullptr) {
+            if (current->word == key) {
+                return true;
+            }
+            current = current->next;
+        }
+        return false;
+    }
+
+    // Funcție pentru ștergerea unui cuvânt din tabel
+    void remove(const string& key) {
+        int index = hashFunction(key);
+        ListNode* current = table[index];
+        ListNode* prev = nullptr;
+        while (current != nullptr) {
+            if (current->word == key) {
+                if (prev != nullptr) {
+                    prev->next = current->next;
+                } else {
+                    table[index] = current->next;
+                }
+                delete current;
+                return;
+            }
+            prev = current;
+            current = current->next;
+        }
+    }
+};
+
+int main() {
+    // Creăm un tabel de dispersie cu 26 de sloturi, fiecare corespunzând unei litere din alfabet
+    HashTable dictionary(26);
+
+    // Adăugăm câteva cuvinte de test
+    dictionary.insert("apple");
+    dictionary.insert("banana");
+    dictionary.insert("cat");
+    dictionary.insert("dog");
+    dictionary.insert("elephant");
+
+    // Căutăm și afișăm rezultatul
+    cout << "Cuvantul \"apple\" este " << (dictionary.search("apple") ? "prezent" : "absent") << " in dictionar.\n";
+    cout << "Cuvantul \"zebra\" este " << (dictionary.search("zebra") ? "prezent" : "absent") << " in dictionar.\n";
+
+    // Ștergem un cuvânt din tabel
+    dictionary.remove("cat");
+
+    // Verificăm din nou
+    cout << "Cuvantul \"cat\" este " << (dictionary.search("cat") ? "prezent" : "absent") << " in dictionar.\n";
+
+    return 0;
+}

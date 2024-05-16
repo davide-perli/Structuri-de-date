@@ -1,0 +1,82 @@
+// Pentru fiecare element dintr-un vector sa se determine primul cel mai mare element care 
+// urmeaaza dupa el in vector folosind o stiva alocata dinamic. 
+// Sa se introduca valorile gasite (adica cel mai mare numar gasit pentru 
+// elementul curent intr-o structura de tip coada alocata dinamic ;
+// se executa aceasta operatie pentru fiecare element din vector
+#include <iostream>
+#include <stack>
+#include <queue>
+#include <vector>
+using namespace std;
+
+// Structura pentru a stoca perechile (element, următorul cel mai mare element)
+struct Pair
+{
+    int element;
+    int nextGreater;
+};
+
+// Funcție pentru a găsi primul cel mai mare element care urmează după fiecare element într-un vector
+queue<Pair> primulCelMaiMareElement(const vector<int>& vec)
+{
+    int n = vec.size();
+    stack<int> stiva;
+    queue<Pair> rezultat;
+
+    // Parcurgem vectorul de la stânga la dreapta
+    for (int i = 0; i < n; ++i)
+    {
+        // Cat timp stiva nu este goala si elementul curent este mai mare decat cel de pe varful stivei
+        while (!stiva.empty() && vec[i] > vec[stiva.top()])
+        {
+            // Stocheaza perechea (element, urmatorul cel mai mare element) in coada
+            Pair p = {vec[stiva.top()], vec[i]};
+            rezultat.push(p);
+            stiva.pop(); // Scoate elementul de pe varful stivei
+        }
+        // Adauga indexul elementului curent in stiva
+        stiva.push(i);
+    }
+
+    // Pentru elementele ramase in stiva, nu exista un urmator element mai mare
+    while (!stiva.empty()) 
+    {
+        Pair p = {vec[stiva.top()], -1}; // -1 inseamna ca nu exista un urmator element mai mare
+        rezultat.push(p);
+        stiva.pop();
+    }
+
+    return rezultat;
+}
+
+// Functie pentru afisarea rezultatului
+void afisareRezultat(queue<Pair>& rezultat) 
+{
+    cout << "Element | Cel mai mare element urmator\n";
+    while (!rezultat.empty()) 
+    {
+        Pair p = rezultat.front();
+        rezultat.pop();
+        cout << "   " << p.element << "    | ";
+        if (p.nextGreater == -1)
+        {
+            cout << "N/A\n";
+        } 
+        else
+        {
+            cout << p.nextGreater << "\n";
+        }
+    }
+}
+
+int main() {
+    vector<int> vec = {4, 6, 3, 2, 8, 1, 7};
+    
+    // Gaseste primul cel mai mare element pentru fiecare element din vector
+    queue<Pair> rezultat = primulCelMaiMareElement(vec);
+
+    // Afiseaza rezultatul
+    afisareRezultat(rezultat);
+
+    return 0;
+}

@@ -1,0 +1,58 @@
+//corectitudinea introducerii de paranteze
+//folosind o structura de date de tip stiva alocata dinamic. Presupunem ca avem 3 tipuri de paranteze ; (), [] si {}
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+// Funcție pentru a verifica corectitudinea introducerii de paranteze
+bool verificaParanteze(const string& expresie) {
+    stack<char> stiva;
+
+    // Parcurgem expresia
+    for (char paranteza : expresie)
+    {
+        // Dacă întâlnim o paranteză deschisă, o adăugăm în stivă
+        if (paranteza == '(' || paranteza == '[' || paranteza == '{')
+        {
+            stiva.push(paranteza);
+        } 
+        else 
+        {
+            // Dacă întâlnim o paranteză închisă, verificăm dacă se potrivește cu cea de pe vârful stivei
+            if (stiva.empty()) 
+            {
+                return false; // Dacă stiva este goală, înseamnă că avem prea multe paranteze închise
+            }
+
+            char parantezaDeschisa = stiva.top();
+            if ((paranteza == ')' && parantezaDeschisa != '(') ||
+                (paranteza == ']' && parantezaDeschisa != '[') ||
+                (paranteza == '}' && parantezaDeschisa != '{')) {
+                return false; // Paranteza închisă nu se potrivește cu cea de pe vârful stivei
+            }
+
+            stiva.pop(); // Scoatem paranteza deschisă din stivă
+        }
+    }
+
+    return stiva.empty(); // Returnăm true dacă stiva este goală la sfârșit
+}
+
+int main() {
+    string expresie;
+    cout << "Introduceti expresia: ";
+    getline(cin, expresie);
+
+    // Verificăm corectitudinea introducerii de paranteze
+    if (verificaParanteze(expresie))
+    {
+        cout << "Parantezele sunt introduse corect.\n";
+    } 
+    else
+    {
+        cout << "Parantezele NU sunt introduse corect.\n";
+    }
+
+    return 0;
+}

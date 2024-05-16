@@ -1,0 +1,60 @@
+//arbore binar de cautare echilibrat pornind de la un vector sortat dat
+#include <iostream>
+#include <cstdlib> // pentru malloc
+using namespace std;
+
+// Structura pentru un nod al arborelui de căutare binară (BST)
+struct node {
+    int key; // cheia sau valoarea stocată în nod
+    struct node* left, *right; // pointeri către copiii stânga și dreapta
+};
+
+// Funcție pentru crearea unui nou nod al BST-ului
+struct node* newNode(int item) {
+    // Alocare memorie pentru noul nod folosind malloc
+    struct node* temp = (struct node*)malloc(sizeof(struct node));
+    temp->key = item; // Inițializare valoare nodului
+    temp->left = temp->right = NULL; // Inițializare pointeri la copii
+    return temp;
+}
+
+// Funcție pentru construirea unui BST echilibrat dintr-un array sortat
+struct node* sortedArrayToBST(int array[], int start, int end) {
+    if (start > end)
+        return NULL;
+
+    // Obținerea elementului din mijloc și transformarea lui în rădăcină
+    int mid = (start + end) / 2;
+    struct node* root = newNode(array[mid]);
+
+    // Construirea recursivă a subarborelui stâng
+    root->left = sortedArrayToBST(array, start, mid - 1);
+
+    // Construirea recursivă a subarborelui drept
+    root->right = sortedArrayToBST(array, mid + 1, end);
+
+    return root;
+}
+
+// Funcție pentru traversarea în ordine a BST-ului și afișarea valorilor
+void inorder(struct node* root) {
+    if (root != NULL) {
+        inorder(root->left); // traversare stânga
+        cout << " " << root->key; // afișare valoare
+        inorder(root->right); // traversare dreapta
+    }
+}
+
+int main() {
+    int array[] = { 2, 3, 4, 5, 6, 7, 8 };
+    int n = sizeof(array) / sizeof(array[0]);
+
+    // Construirea unui BST echilibrat din array-ul sortat
+    struct node* root = sortedArrayToBST(array, 0, n - 1);
+
+    // Afișarea traversării în ordine a BST-ului
+    cout << "Traversarea în ordine a BST-ului construit:";
+    inorder(root);
+
+    return 0;
+}
