@@ -1,4 +1,4 @@
-//heap sort array
+//heap sort array O(nlogn)
 #include <iostream>
 using namespace std;
 

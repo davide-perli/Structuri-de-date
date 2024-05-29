@@ -2,133 +2,145 @@
 #include <climits> // Pentru a folosi constante pentru limitele valorilor întregi
 using namespace std;
 
+// Definirea clasei Node pentru a reprezenta un nod în lista dublu-încrucișată circulară
 class Node {
 public:
-    int Value;
-    Node* Next;
-    Node* Prev;
+    int Value;   // Valoarea stocată în nod
+    Node* Next;  // Pointer către nodul următor
+    Node* Prev;  // Pointer către nodul precedent
 
+    // Constructor pentru a inițializa un nod cu o valoare dată
     Node(int value) : Value(value), Next(nullptr), Prev(nullptr) {}
 };
 
+// Funcție pentru a afișa valorile din lista dublu-încrucișată circulară
 void printList(Node* head) {
-    if (head == nullptr) return;
+    if (head == nullptr) return; // Dacă lista este goală, ieșim din funcție
 
     Node* temp = head;
     do {
-        cout << temp->Value << endl;
-        temp = temp->Next;
-    } while (temp != head);
+        cout << temp->Value << endl; // Afișăm valoarea curentă
+        temp = temp->Next;           // Trecem la nodul următor
+    } while (temp != head);          // Continuăm până revenim la nodul de start
 }
 
+// Funcție pentru a insera un nod la începutul listei
 void insertAtFront(Node** head, int newValue) {
-    Node* newNode = new Node(newValue);
+    Node* newNode = new Node(newValue); // Creăm un nou nod
     if (*head == nullptr) {
+        // Dacă lista este goală, noul nod devine singurul nod din listă
         newNode->Next = newNode;
         newNode->Prev = newNode;
         *head = newNode;
     } else {
-        Node* tail = (*head)->Prev;
-        newNode->Next = *head;
-        newNode->Prev = tail;
-        tail->Next = newNode;
-        (*head)->Prev = newNode;
-        *head = newNode;
+        // Dacă lista nu este goală, inserăm nodul înainte de nodul curent de start
+        Node* tail = (*head)->Prev; // Găsim ultimul nod
+        newNode->Next = *head;      // Noul nod arată spre nodul de start
+        newNode->Prev = tail;       // Noul nod arată spre ultimul nod
+        tail->Next = newNode;       // Ultimul nod arată spre noul nod
+        (*head)->Prev = newNode;    // Nodul de start arată spre noul nod
+        *head = newNode;            // Noul nod devine noul nod de start
     }
 }
 
+// Funcție pentru a insera un nod la sfârșitul listei
 void insertAtEnd(Node** head, int newValue) {
-    Node* newNode = new Node(newValue);
+    Node* newNode = new Node(newValue); // Creăm un nou nod
     if (*head == nullptr) {
+        // Dacă lista este goală, noul nod devine singurul nod din listă
         newNode->Next = newNode;
         newNode->Prev = newNode;
         *head = newNode;
     } else {
-        Node* tail = (*head)->Prev;
-        tail->Next = newNode;
-        newNode->Prev = tail;
-        newNode->Next = *head;
-        (*head)->Prev = newNode;
+        // Dacă lista nu este goală, inserăm nodul după ultimul nod
+        Node* tail = (*head)->Prev; // Găsim ultimul nod
+        tail->Next = newNode;       // Ultimul nod arată spre noul nod
+        newNode->Prev = tail;       // Noul nod arată spre ultimul nod
+        newNode->Next = *head;      // Noul nod arată spre nodul de start
+        (*head)->Prev = newNode;    // Nodul de start arată spre noul nod
     }
 }
 
+// Funcție pentru a insera un nod după un nod existent în listă
 void insertAfter(Node* previous, int newValue) {
     if (previous == nullptr) {
         cout << "Previous can't be NULL";
         return;
     }
-    Node* newNode = new Node(newValue);
-    Node* nextNode = previous->Next;
-    newNode->Next = nextNode;
-    newNode->Prev = previous;
-    previous->Next = newNode;
-    nextNode->Prev = newNode;
+    Node* newNode = new Node(newValue); // Creăm un nou nod
+    Node* nextNode = previous->Next;    // Găsim nodul următor
+    newNode->Next = nextNode;           // Noul nod arată spre nodul următor
+    newNode->Prev = previous;           // Noul nod arată spre nodul precedent
+    previous->Next = newNode;           // Nodul precedent arată spre noul nod
+    nextNode->Prev = newNode;           // Nodul următor arată spre noul nod
 }
 
 // Funcție pentru a găsi valoarea minimă din listă
 int minValue(Node* head) {
-    if (head == nullptr) return INT_MAX;
-    int minVal = head->Value;
+    if (head == nullptr) return INT_MAX; // Dacă lista este goală, returnăm valoarea maximă posibilă
+    int minVal = head->Value;            // Presupunem că valoarea minimă este valoarea nodului de start
     Node* temp = head->Next;
-    while (temp != head) {
-        if (temp->Value < minVal) {
+    while (temp != head) {               // Parcurgem lista
+        if (temp->Value < minVal) {      // Actualizăm valoarea minimă dacă găsim o valoare mai mică
             minVal = temp->Value;
         }
-        temp = temp->Next;
+        temp = temp->Next;               // Trecem la nodul următor
     }
     return minVal;
 }
 
 // Funcție pentru a găsi valoarea maximă din listă
 int maxValue(Node* head) {
-    if (head == nullptr) return INT_MIN;
-    int maxVal = head->Value;
+    if (head == nullptr) return INT_MIN; // Dacă lista este goală, returnăm valoarea minimă posibilă
+    int maxVal = head->Value;            // Presupunem că valoarea maximă este valoarea nodului de start
     Node* temp = head->Next;
-    while (temp != head) {
-        if (temp->Value > maxVal) {
+    while (temp != head) {               // Parcurgem lista
+        if (temp->Value > maxVal) {      // Actualizăm valoarea maximă dacă găsim o valoare mai mare
             maxVal = temp->Value;
         }
-        temp = temp->Next;
+        temp = temp->Next;               // Trecem la nodul următor
     }
     return maxVal;
 }
 
 // Funcție pentru a căuta un element în listă
 bool search(Node* head, int target) {
-    if (head == nullptr) return false;
+    if (head == nullptr) return false; // Dacă lista este goală, returnăm false
     Node* temp = head;
     do {
-        if (temp->Value == target) return true;
+        if (temp->Value == target) return true; // Dacă găsim elementul, returnăm true
         temp = temp->Next;
-    } while (temp != head);
+    } while (temp != head); // Continuăm până revenim la nodul de start
     return false;
 }
 
 // Funcție pentru a găsi predecesorul unui element în listă
 Node* predecesor(Node* head, int target) {
-    if (head == nullptr || head->Value == target) return nullptr;
+    if (head == nullptr || head->Value == target) return nullptr; // Dacă lista este goală sau elementul este primul nod, returnăm nullptr
     Node* temp = head;
     do {
-        if (temp->Next->Value == target) return temp;
+        if (temp->Next->Value == target) return temp; // Dacă găsim elementul, returnăm nodul precedent
         temp = temp->Next;
-    } while (temp != head);
+    } while (temp != head); // Continuăm până revenim la nodul de start
     return nullptr;
 }
 
 int main() {
-    Node* head = new Node(1); // Primul nod
-    head->Next = head;
-    head->Prev = head;
+    Node* head = nullptr; // Inițial, lista este goală
 
-    insertAtFront(&head, 0);
-    insertAtFront(&head, -2);
+    int inputValue;
+    cout << "Introduceti valori in lista (0 pentru a termina):" << endl;
 
-    insertAtEnd(&head, 5);
-    insertAtEnd(&head, 6);
+    // Bucla pentru a citi valori de la tastatură până la introducerea valorii 0
+    while (true) {
+        cin >> inputValue;
+        if (inputValue == 0)
+            break; // Ieșim din buclă dacă valoarea este 0
+        insertAtEnd(&head, inputValue); // Inserăm valoarea la sfârșitul listei
+    }
 
-    insertAfter(head, -1);
-    insertAfter(head->Next->Next, 3);
-
+    // Afișăm lista
+    cout << "Lista dupa introducerea valorilor:" << endl;
     printList(head);
 
     // Găsim și afișăm valoarea minimă și valoarea maximă din listă
@@ -136,7 +148,9 @@ int main() {
     cout << "Valoarea maxima din lista: " << maxValue(head) << endl;
 
     // Căutăm elementul dorit în listă și afișăm rezultatul
-    int elementCautat = 3;
+    int elementCautat;
+    cout << "Introduceti elementul de cautat in lista: ";
+    cin >> elementCautat;
     if (search(head, elementCautat))
         cout << "Elementul " << elementCautat << " a fost gasit in lista.\n";
     else

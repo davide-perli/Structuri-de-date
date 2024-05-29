@@ -1,4 +1,4 @@
-//arbore binar de cautare echilibrat pornind de la un vector sortat dat
+//arbore binar de cautare echilibrat pornind de la un vector sortat dat  O(log n)
 #include <iostream>
 #include <cstdlib> // pentru malloc
 using namespace std;

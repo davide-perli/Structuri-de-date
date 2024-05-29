@@ -79,10 +79,14 @@ int main() {
     dictionary.insert("cat");
     dictionary.insert("dog");
     dictionary.insert("elephant");
+    dictionary.insert("emu");
 
     // Căutăm și afișăm rezultatul
     cout << "Cuvantul \"apple\" este " << (dictionary.search("apple") ? "prezent" : "absent") << " in dictionar.\n";
     cout << "Cuvantul \"zebra\" este " << (dictionary.search("zebra") ? "prezent" : "absent") << " in dictionar.\n";
+    cout << "Cuvantul \"elephant\" este " << (dictionary.search("elephant") ? "prezent" : "absent") << " in dictionar.\n";
+    cout << "Cuvantul \"emu\" este " << (dictionary.search("emu") ? "prezent" : "absent") << " in dictionar.\n";
+    cout << "Cuvantul \"cat\" este " << (dictionary.search("cat") ? "prezent" : "absent") << " in dictionar.\n";
 
     // Ștergem un cuvânt din tabel
     dictionary.remove("cat");

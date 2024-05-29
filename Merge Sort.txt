@@ -1,4 +1,4 @@
-//merge sort array
+//merge sort array O(n*log(n))
 #include <iostream>
 using namespace std;
 
