@@ -1,4 +1,3 @@
-//interclasarea a doi arbori binari de cautare echilibrati
 #include <iostream>
 #include <cstdlib> // pentru malloc
 using namespace std;
@@ -23,14 +22,20 @@ struct node* newNode(int item)
 // Funcție pentru inserarea unui nod într-un BST
 struct node* insert(struct node* node, int key)
 {
+    // Dacă nodul curent este NULL, creăm un nou nod
     if (node == NULL)
         return newNode(key);
 
+    // Dacă valoarea de inserat este mai mică decât valoarea nodului curent,
+    // continuăm inserarea în subarborele stâng
     if (key < node->key)
         node->left = insert(node->left, key);
+    // Dacă valoarea de inserat este mai mare decât valoarea nodului curent,
+    // continuăm inserarea în subarborele drept
     else if (key > node->key)
         node->right = insert(node->right, key);
 
+    // Returnăm nodul curent (posibil modificat)
     return node;
 }
 
@@ -43,11 +48,11 @@ struct node* mergeTrees(struct node* root1, struct node* root2)
     if (root2 == NULL)
         return root1;
 
-    // Interclasarea rădăcinilor
+    // Interclasarea subarborilor stângi și drepți
     root1->left = mergeTrees(root1->left, root2->left);
     root1->right = mergeTrees(root1->right, root2->right);
 
-    // Inserarea rădăcinilor într-un nou arbore
+    // Inserăm valoarea rădăcinii celui de-al doilea arbore în primul arbore
     return insert(root1, root2->key);
 }
 
@@ -56,9 +61,12 @@ void inorder(struct node* root)
 {
     if (root != NULL) 
     {
-        inorder(root->left); // traversare stânga
-        cout << " " << root->key; // afișare valoare
-        inorder(root->right); // traversare dreapta
+        // Traversăm recursiv subarborele stâng
+        inorder(root->left);
+        // Afișăm valoarea nodului curent
+        cout << " " << root->key;
+        // Traversăm recursiv subarborele drept
+        inorder(root->right);
     }
 }
 

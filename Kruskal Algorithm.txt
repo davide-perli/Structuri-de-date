@@ -1,0 +1,100 @@
+#include <iostream>    
+#include <vector>      
+#include <algorithm>   
+
+using namespace std;
+
+// Clasa DSU (Disjoint Set Union) folosind compresia drumului și unirea după rang
+class DSU {
+    int* parent;  // Array pentru a stoca părintele fiecărui nod
+    int* rank;    // Array pentru a stoca rangul fiecărui nod
+
+public:
+    // Constructorul initializează cele două array-uri
+    DSU(int n) {
+        parent = new int[n];
+        rank = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            parent[i] = -1;  // Inițial, fiecare nod este părintele său
+            rank[i] = 1;     // Rangul fiecărui nod este 1
+        }
+    }
+
+    // Funcția find cu compresia drumului
+    int find(int i) {
+        if (parent[i] == -1)
+            return i;
+        return parent[i] = find(parent[i]);
+    }
+
+    // Funcția unite cu unirea după rang
+    void unite(int x, int y) {
+        int s1 = find(x);
+        int s2 = find(y);
+
+        if (s1 != s2) {
+            if (rank[s1] < rank[s2]) {
+                parent[s1] = s2;
+            } else if (rank[s1] > rank[s2]) {
+                parent[s2] = s1;
+            } else {
+                parent[s2] = s1;
+                rank[s1] += 1;
+            }
+        }
+    }
+};
+
+// Clasa Graph pentru reprezentarea grafului și implementarea algoritmului lui Kruskal
+class Graph {
+    vector<vector<int>> edgelist;  // Lista de muchii a grafului
+    int V;  // Numărul de vârfuri în graf
+
+public:
+    // Constructorul initializează numărul de vârfuri
+    Graph(int V) { this->V = V; }
+
+    // Funcția pentru a adăuga o muchie în graf
+    void addEdge(int x, int y, int w) {
+        edgelist.push_back({w, x, y});
+    }
+
+    // Funcția pentru a construi și afișa MST folosind algoritmul lui Kruskal
+    void kruskals_mst() {
+        // Sortează toate muchiile în ordine crescătoare după greutate
+        sort(edgelist.begin(), edgelist.end());
+
+        // Initializează DSU
+        DSU s(V);
+        int ans = 0;
+        cout << "Muchiile în arborele parțial minim sunt:" << endl;
+        for (auto edge : edgelist) {
+            int w = edge[0];
+            int x = edge[1];
+            int y = edge[2];
+
+            // Ia această muchie în MST dacă nu formează un ciclu
+            if (s.find(x) != s.find(y)) {
+                s.unite(x, y);
+                ans += w;
+                cout << x << " -- " << y << " == " << w << endl;
+            }
+        }
+        cout << "Costul minim al arborelui parțial minim este: " << ans << endl;
+    }
+};
+
+
+int main() {
+    Graph g(4);
+    g.addEdge(0, 1, 10);
+    g.addEdge(1, 3, 15);
+    g.addEdge(2, 3, 4);
+    g.addEdge(2, 0, 6);
+    g.addEdge(0, 3, 5);
+
+    g.kruskals_mst();
+
+    return 0;
+}
